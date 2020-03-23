@@ -5,12 +5,12 @@
 #define RXD2 16 
 #define TXD2 17
 
-const char* ssid = "your_ssid";             // your wifi ssid
-const char* password = "your_password";     // your wifi password
+const char* ssid = "ssid";             // your wifi ssid
+const char* password = "password";     // your wifi password
 const char* mqttServer = "192.168.1.100";   // mqtt server address
 const int mqttPort = 1883;                  // mqtt port
-const char* mqttUser = "remote_username";     // your mqtt user
-const char* mqttPassword = "remote_password"; // your mqtt password
+const char* mqttUser = "mqtt_username";     // your mqtt user
+const char* mqttPassword = "mqtt_password"; // your mqtt password
 
 float v;  // variable for voltage
 float c;  // variable for current
@@ -62,7 +62,7 @@ void loop() {
     Serial.println("Sending message to MQTT topic..");
     Serial.println(JSONmessageBuffer);
      
-    if (client.publish("esp/test", JSONmessageBuffer) == true) {
+    if (client.publish("esp/pzem004t", JSONmessageBuffer) == true) {
       Serial.println("Success sending message");
     } else {
       Serial.println("Error sending message");
