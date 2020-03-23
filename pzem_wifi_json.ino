@@ -1,20 +1,21 @@
-#include <ArduinoJson.h>
+#include <ArduinoJson.h>    // ArduinoJson library v5.9.0
 #include <WiFi.h>
 #include <PubSubClient.h>
 #include <PZEM004Tv30.h>
 #define RXD2 16 
 #define TXD2 17
 
-const char* ssid = "TOTOLINK_N200RE";
-const char* password = "Afif1234"; 
-const char* mqttServer = "192.168.1.116";
-const int mqttPort = 1883;
-const char* mqttUser = "remote_username";
-const char* mqttPassword = "remote_password";
+const char* ssid = "your_ssid";             // your wifi ssid
+const char* password = "your_password";     // your wifi password
+const char* mqttServer = "192.168.1.100";   // mqtt server address
+const int mqttPort = 1883;                  // mqtt port
+const char* mqttUser = "remote_username";     // your mqtt user
+const char* mqttPassword = "remote_password"; // your mqtt password
 
-float tegangan;
-float arus;
-float daya;
+float v;  // variable for voltage
+float c;  // variable for current
+float p;  // variable for power
+float e;  // variable for energy
 
 PZEM004Tv30 pzem(&Serial2);
 WiFiClient espClient;
@@ -51,9 +52,10 @@ void loop() {
     
     JSONencoder["device"] = "ESP32";
     JSONencoder["sensor type"] = "PZEM004T";
-    JSONencoder["tegangan"] = tegangan;
-    JSONencoder["arus"] = arus;
-    JSONencoder["daya"] = daya;
+    JSONencoder["voltage"] = v;
+    JSONencoder["current"] = c;
+    JSONencoder["power"] = p;
+    JSONencoder["energy"] = e;
 
     char JSONmessageBuffer[100];
     JSONencoder.printTo(JSONmessageBuffer, sizeof(JSONmessageBuffer));
@@ -65,13 +67,14 @@ void loop() {
     } else {
       Serial.println("Error sending message");
     }
-    //client.publish("daya", String(daya).c_str());
+    
     delay(2000);
     client.loop();
 }
  
 void readPZEM(){
-    tegangan = pzem.voltage();
-    arus = pzem.current();
-    daya = pzem.power();
+    v = pzem.voltage();
+    c = pzem.current();
+    p = pzem.power();
+    e = pzem.energy();
 }
